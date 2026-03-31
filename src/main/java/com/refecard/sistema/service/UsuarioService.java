@@ -25,4 +25,15 @@ public class UsuarioService {
     public void deletar(Long id) {
         repository.deleteById(id);
     }
+
+    public Usuario login(String email, String senha) {
+        Usuario usuario = repository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (!usuario.getSenha().equals(senha)) {
+            throw new RuntimeException("Senha inválida");
+        }
+
+        return usuario;
+    }
 }
