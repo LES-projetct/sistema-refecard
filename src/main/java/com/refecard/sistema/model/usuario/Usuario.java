@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.refecard.sistema.model.Cartao;
 
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class Usuario {
     @Column(unique = true, nullable = false)
     private String cpf;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 
     private LocalDate dataNascimento;

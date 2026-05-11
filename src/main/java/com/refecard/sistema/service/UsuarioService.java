@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.refecard.sistema.model.usuario.Usuario;
 import com.refecard.sistema.repository.UsuarioRepository;
+import com.refecard.sistema.dto.UsuarioListagemDTO;
 
 import java.util.List;
 
@@ -32,12 +33,47 @@ public class UsuarioService {
 
     public Usuario login(String email, String senha) {
         Usuario usuario = repository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+            .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
         if (!usuario.getSenha().equals(senha)) {
-            throw new RuntimeException("Senha inválida");
+            throw new IllegalArgumentException("Senha inválida");
         }
 
         return usuario;
+    }
+
+    public List<UsuarioListagemDTO> listarUsuariosTela() {
+
+        return repository.findAll()
+            .stream()
+            .map(usuario -> {
+
+                String codigoCartaoRfid = "";
+                Double saldo = 0.0;
+                String status = "Inativo";
+
+                if (usuario.getCartao() != null) {
+
+                    codigoCartaoRfid = usuario.getCartao().getCodigoCartaoRfid();
+
+                    saldo = usuario.getCartao().getSaldo();
+
+                    Boolean bloqueado =
+                        usuario.getCartao().getAcessoBloqueado();
+
+                    status = Boolean.TRUE.equals(bloqueado)
+                        ? "Bloqueado"
+                        : "Ativo";
+                }
+
+                return new UsuarioListagemDTO(
+                    usuario.getId(),
+                    usuario.getNome(),
+                    codigoCartaoRfid,
+                    saldo,
+                    status
+                );
+            })
+            .toList();
     }
 }

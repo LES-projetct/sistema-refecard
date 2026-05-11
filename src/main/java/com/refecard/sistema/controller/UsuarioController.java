@@ -1,9 +1,11 @@
 package com.refecard.sistema.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.refecard.sistema.dto.LoginRequest;
+import com.refecard.sistema.dto.UsuarioListagemDTO;
 import com.refecard.sistema.model.usuario.Usuario;
 import com.refecard.sistema.service.UsuarioService;
 
@@ -32,13 +34,34 @@ public class UsuarioController {
         return service.buscarPorCpf(cpf);
     }
 
+    @GetMapping("/listagem")
+    public List<UsuarioListagemDTO> listarUsuariosTela() {
+
+        return service.listarUsuariosTela();
+    }
+
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) {
         service.deletar(id);
     }
 
     @PostMapping("/login")
-    public Usuario login(@RequestBody LoginRequest request) {
-        return service.login(request.getEmail(), request.getSenha());
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+
+        try {
+
+            Usuario usuario = service.login(
+                request.getEmail(),
+                request.getSenha()
+            );
+
+            return ResponseEntity.ok(usuario);
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 }
