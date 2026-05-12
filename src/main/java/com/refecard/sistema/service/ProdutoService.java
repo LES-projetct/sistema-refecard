@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.refecard.sistema.model.Produto;
+import com.refecard.sistema.dto.ProdutoListagemDTO;
 import com.refecard.sistema.repository.ProdutoRepository;
 
 import java.util.List;
@@ -28,5 +29,20 @@ public class ProdutoService {
 
     public void deletar(Long id) {
         repository.deleteById(id);
+    }
+
+    public List<ProdutoListagemDTO> listarProdutosTela() {
+
+        return repository.findAll()
+            .stream()
+            .map(produto -> new ProdutoListagemDTO(
+                produto.getId(),
+                produto.getDescricao(),
+                produto.getCodigoBarras(),
+                produto.getValorCusto(),
+                produto.getValorVenda(),
+                produto.getTipoProduto()
+            ))
+            .toList();
     }
 }

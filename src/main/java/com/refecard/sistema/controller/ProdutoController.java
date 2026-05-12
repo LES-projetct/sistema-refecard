@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.refecard.sistema.model.Produto;
+import com.refecard.sistema.dto.ProdutoListagemDTO;
 import com.refecard.sistema.service.ProdutoService;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
@@ -28,6 +30,12 @@ public class ProdutoController {
     @GetMapping("/{id}")
     public Produto buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id);
+    }
+
+    @GetMapping("/listagem")
+    public List<ProdutoListagemDTO> listarProdutosTela() {
+
+        return service.listarProdutosTela();
     }
 
     @DeleteMapping("/{id}")
