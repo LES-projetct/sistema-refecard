@@ -4,10 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.refecard.sistema.model.usuario.Usuario;
+import com.refecard.sistema.model.usuario.UsuarioRole;
+import com.refecard.sistema.model.usuario.Role;
 import com.refecard.sistema.repository.UsuarioRepository;
 import com.refecard.sistema.dto.UsuarioListagemDTO;
+import com.refecard.sistema.dto.UsuarioCreateDTO;
+import com.refecard.sistema.model.Cartao;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UsuarioService {
@@ -75,5 +80,32 @@ public class UsuarioService {
                 );
             })
             .toList();
+    }
+
+    public Usuario criarUsuarioComCartao(UsuarioCreateDTO dto) {
+
+        Usuario usuario = new Usuario();
+        usuario.setNome(dto.getNome());
+        usuario.setEmail(dto.getEmail());
+        usuario.setCpf(dto.getCpf());
+        usuario.setSenha(dto.getSenha());
+        usuario.setDataNascimento(dto.getDataNascimento());
+
+        UsuarioRole role = new UsuarioRole();
+        role.setNomeRole(dto.getRole());
+        role.setUsuario(usuario);
+
+        usuario.getRoles().add(role);
+
+        Cartao cartao = new Cartao();
+        cartao.setCodigoCartaoRfid(UUID.randomUUID().toString());
+        cartao.setSaldo(0.0);
+        cartao.setLimiteCredito(0.0);
+        cartao.setAcessoBloqueado(false);
+        cartao.setUsuario(usuario);
+
+        usuario.setCartao(cartao);
+
+        return repository.save(usuario);
     }
 }

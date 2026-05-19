@@ -3,7 +3,9 @@ package com.refecard.sistema.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -23,9 +25,9 @@ public class Fornecedor {
 
     @OneToMany(mappedBy = "fornecedor", cascade = CascadeType.ALL)
     @JsonManagedReference("fornecedor-produto")
-    private Set<Produto> produtos = new HashSet<>();
+    private List<Produto> produtos = new ArrayList<>();
 
     @OneToMany(mappedBy = "fornecedor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("fornecedor-contaPagar")
-    private Set<ContaPagar> contasPagar = new HashSet<>();
+    private List<ContaPagar> contasPagar = new ArrayList<>();
 }

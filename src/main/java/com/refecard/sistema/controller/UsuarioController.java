@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.refecard.sistema.dto.LoginRequest;
+import com.refecard.sistema.dto.UsuarioCreateDTO;
 import com.refecard.sistema.dto.UsuarioListagemDTO;
 import com.refecard.sistema.model.usuario.Usuario;
 import com.refecard.sistema.service.UsuarioService;
@@ -22,6 +23,11 @@ public class UsuarioController {
     @PostMapping
     public Usuario criar(@RequestBody Usuario usuario) {
         return service.salvar(usuario);
+    }
+
+    @PostMapping("/criar-com-cartao")
+    public Usuario criarComCartao(@RequestBody UsuarioCreateDTO dto) {
+        return service.criarUsuarioComCartao(dto);
     }
 
     @GetMapping

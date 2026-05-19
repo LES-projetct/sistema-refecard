@@ -20,6 +20,11 @@ public class ContaPagarController {
         return service.salvar(contaPagar);
     }
 
+    @PostMapping("/fornecedor/{fornecedorId}/pagar")
+    public void pagarFornecedor(@PathVariable Long fornecedorId) {
+        service.pagarFornecedor(fornecedorId);
+    }
+
     @GetMapping
     public List<ContaPagar> listar() {
         return service.listar();

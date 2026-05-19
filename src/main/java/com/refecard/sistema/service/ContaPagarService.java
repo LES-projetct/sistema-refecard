@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import com.refecard.sistema.model.ContaPagar;
 import com.refecard.sistema.repository.ContaPagarRepository;
 
+import java.time.LocalDate;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ContaPagarService {
@@ -24,5 +26,22 @@ public class ContaPagarService {
 
     public void deletar(Long id) {
         repository.deleteById(id);
+    }
+
+    @Transactional
+    public void pagarFornecedor(Long fornecedorId) {
+
+        List<ContaPagar> contas = repository.findAll()
+            .stream()
+            .filter(c ->
+                c.getFornecedor().getId().equals(fornecedorId)
+                && c.getDataPagamento() == null
+            )
+            .toList();
+
+        for (ContaPagar conta : contas) {
+            conta.setDataPagamento(LocalDate.now());
+            repository.save(conta);
+        }
     }
 }
